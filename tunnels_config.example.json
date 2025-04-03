@@ -1,0 +1,22 @@
+{
+    "tunnels": [
+      {
+        "name": "rpc_node_1",
+        "remote_host": "ip-address-of-ssh-server",
+        "remote_user": "some-user",
+        "ssh_key": "/path/to/ssh/key",
+        "target": "some-rpc-node.com",
+        "port": 443,
+        "local_port": 18008
+      },
+      {
+        "name": "rpc_node_2",
+        "remote_host": "ip-address-of-ssh-server",
+        "remote_user": "some-user",
+        "ssh_key": "/path/to/ssh/key",
+        "target": "some-other-rpc-node.com",
+        "port": 443,
+        "local_port": 18028
+      }
+    ]
+  }
