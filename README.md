@@ -88,8 +88,8 @@ Example configuration:
       "remote_user": "tunnel_user",
       "ssh_key": "~/.ssh/id_rsa",
       "target": "another-api.example.com",
-      "port": 443,
-      "local_port": 18028
+      "port": 8545,
+      "local_port": 18018
     }
   ]
 }
@@ -285,10 +285,6 @@ This structured approach ensures clean teardown while maintaining the ability to
 ## Future Development
 
 Here are some possible enhancements for future releases:
-
-### HTTP Support
-- Test and adapt the tunnels for plain HTTP connections (currently optimized for HTTPS)
-- Add configuration options to handle HTTP-specific requirements
 
 ### Tunnel Monitoring and Resilience
 - Implement health checks to monitor tunnel status
