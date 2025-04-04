@@ -185,11 +185,15 @@ EOF
     # Wait for SSH to establish
     sleep 2
     
-    # Start socat in a screen window
-    screen -S tunnels -X screen -t socat_${name} socat -v TCP-LISTEN:${socat_port},fork,reuseaddr OPENSSL:localhost:${local_port},verify=0
-    
-    # Add to HAProxy config
-    cat >> $HAPROXY_CONFIG << EOF
+    # For HTTPS connections (port 443), use socat for SSL termination
+    # For HTTP connections, connect HAProxy directly to SSH tunnel
+    if [ "$port" -eq 443 ]; then
+      echo "HTTPS connection detected, using socat for SSL termination"
+      # Start socat in a screen window
+      screen -S tunnels -X screen -t socat_${name} socat -v TCP-LISTEN:${socat_port},fork,reuseaddr OPENSSL:localhost:${local_port},verify=0
+      
+      # Add to HAProxy config with socat in the middle
+      cat >> $HAPROXY_CONFIG << EOF
 
 frontend ${name}_proxy
   bind 127.0.0.1:${haproxy_port}
@@ -202,6 +206,23 @@ backend ${name}_backend
   mode http
   server tunnel 127.0.0.1:${socat_port}
 EOF
+    else
+      echo "HTTP connection detected, connecting HAProxy directly to SSH tunnel"
+      # Add to HAProxy config connecting directly to SSH tunnel
+      cat >> $HAPROXY_CONFIG << EOF
+
+frontend ${name}_proxy
+  bind 127.0.0.1:${haproxy_port}
+  mode http
+  option http-server-close
+  http-request set-header Host ${target}
+  default_backend ${name}_backend
+
+backend ${name}_backend
+  mode http
+  server tunnel 127.0.0.1:${local_port}
+EOF
+    fi
 
     echo "Service $name available at http://localhost:${haproxy_port}"
   done

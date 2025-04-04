@@ -15,8 +15,8 @@
         "remote_user": "some-user",
         "ssh_key": "/path/to/ssh/key",
         "target": "some-other-rpc-node.com",
-        "port": 443,
-        "local_port": 18028
+        "port": 8545,
+        "local_port": 18018
       }
     ]
   }
